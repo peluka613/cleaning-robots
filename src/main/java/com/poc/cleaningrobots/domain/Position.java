@@ -8,7 +8,7 @@ import lombok.Getter;
 public class Position {
     private int x;
     private int y;
-    Direction direction;
+    private Direction direction;
 
     public void moveForward() {
         x += direction.getX();
