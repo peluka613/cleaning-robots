@@ -5,6 +5,7 @@ import com.poc.cleaningrobots.domain.Floor;
 import com.poc.cleaningrobots.domain.Position;
 import com.poc.cleaningrobots.domain.Robot;
 import com.poc.cleaningrobots.exceptions.EmptyInstructionException;
+import com.poc.cleaningrobots.exceptions.FloorOverflowException;
 import com.poc.cleaningrobots.exceptions.InvalidInstructionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,5 +70,14 @@ class RobotCleanerServiceTest {
         String instructions = "";
         floor.getRobots().add(new Robot(initialPosition, instructions));
         assertThrows(EmptyInstructionException.class, () -> service.perform(floor));
+    }
+
+    @Test()
+    void overflowTheFloorArea() {
+        floor.getRobots().clear();
+        Position initialPosition = new Position(3, 3, Direction.N);
+        String instructions = "MMMMM";
+        floor.getRobots().add(new Robot(initialPosition, instructions));
+        assertThrows(FloorOverflowException.class, () -> service.perform(floor));
     }
 }
