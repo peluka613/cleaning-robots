@@ -8,7 +8,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class FloorInput {
-    private int maxX;
-    private int maxY;
-    List<RobotInput> robots;
+    private String maxSize;
+    private List<RobotInput> robots;
 }

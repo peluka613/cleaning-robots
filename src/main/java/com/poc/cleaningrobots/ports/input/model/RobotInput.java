@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class RobotInput {
-    private PositionInput position;
+    private String position;
     private String instructions;
 }

@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface WebInputPort {
 
     @PostMapping("/process")
-    ResponseEntity<String> process(@RequestBody FloorInput input);
+    ResponseEntity<String> safeProcess(@RequestBody FloorInput input);
 }

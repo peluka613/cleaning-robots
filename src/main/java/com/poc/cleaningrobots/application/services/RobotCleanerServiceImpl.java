@@ -5,6 +5,7 @@ import com.poc.cleaningrobots.domain.Instruction;
 import com.poc.cleaningrobots.domain.Position;
 import com.poc.cleaningrobots.domain.Robot;
 import com.poc.cleaningrobots.exceptions.EmptyInstructionException;
+import com.poc.cleaningrobots.exceptions.EmptyRobotsException;
 import com.poc.cleaningrobots.exceptions.FloorOverflowException;
 import org.springframework.util.StringUtils;
 
@@ -13,13 +14,19 @@ import java.util.stream.Collectors;
 
 public class RobotCleanerServiceImpl implements RobotCleanerService {
 
-
     public List<Position> perform(Floor floor) {
+        validateRobotsList(floor);
         return floor.getRobots().stream().map(
                 robot -> {
                     startRobot(floor.getMaxX(), floor.getMaxY(), robot);
                     return robot.getPosition();
                 }).collect(Collectors.toList());
+    }
+
+    private void validateRobotsList(Floor floor) {
+        if (floor.getRobots() == null || floor.getRobots().isEmpty()) {
+            throw new EmptyRobotsException();
+        }
     }
 
     private void startRobot(int maxX, int maxY, Robot robot) {
