@@ -11,6 +11,7 @@ import com.poc.cleaningrobots.exceptions.InvalidInputLineException;
 import com.poc.cleaningrobots.ports.input.model.FloorInput;
 import com.poc.cleaningrobots.ports.input.model.RobotInput;
 import com.poc.cleaningrobots.ports.input.web.WebInputPort;
+import com.poc.cleaningrobots.ports.output.SendResponsePort;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,15 +24,18 @@ import java.util.List;
 public class WebController implements WebInputPort {
 
     private final RobotCleanerService service;
+    private final SendResponsePort responsePort;
 
-    public WebController(RobotCleanerService service) {
+    public WebController(RobotCleanerService service, SendResponsePort responsePort) {
         this.service = service;
+        this.responsePort = responsePort;
     }
 
     @Override
     public ResponseEntity<String> safeProcess(FloorInput input) {
         try {
             List<Position> results = process(input);
+            responsePort.sendResponse(results);
             return ResponseEntity.ok("Request processing");
         } catch (CleaningRobotsException e) {
             log.error(e.getMessage());
@@ -44,9 +48,7 @@ public class WebController implements WebInputPort {
 
     private List<Position> process(FloorInput input) {
         Floor floor = mapInputToFloor(input);
-        List<Position> results = service.perform(floor);
-        results.forEach(position -> log.info("{} {} {}", position.getX(), position.getY(), position.getDirection().name()));
-        return results;
+        return service.perform(floor);
     }
 
     private Floor mapInputToFloor(FloorInput input) {
